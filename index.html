@@ -1,0 +1,302 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Notes Viewer</title>
+
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #222;
+        }
+
+        .header {
+            background: #172554;
+            color: white;
+            padding: 18px 25px;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .container {
+            display: flex;
+            min-height: calc(100vh - 60px);
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 15px;
+        }
+
+        .note-item {
+            padding: 12px;
+            margin-bottom: 7px;
+            cursor: pointer;
+            border-radius: 6px;
+            background: #f3f4f6;
+            font-size: 14px;
+        }
+
+        .note-item:hover,
+        .note-item.active {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .content {
+            flex: 1;
+            padding: 35px;
+            overflow-x: auto;
+        }
+
+        .markdown {
+            background: white;
+            padding: 35px;
+            border-radius: 10px;
+            max-width: 1000px;
+            margin: auto;
+            line-height: 1.7;
+        }
+
+        .markdown h1,
+        .markdown h2,
+        .markdown h3 {
+            margin: 20px 0 12px;
+        }
+
+        .markdown p {
+            margin: 12px 0;
+        }
+
+        .markdown pre {
+            background: #1e293b;
+            color: white;
+            padding: 18px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        .markdown code {
+            background: #e5e7eb;
+            padding: 3px 6px;
+            border-radius: 4px;
+        }
+
+        .markdown pre code {
+            background: transparent;
+        }
+
+        .markdown table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+        }
+
+        .markdown th,
+        .markdown td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .markdown th {
+            background: #e5e7eb;
+        }
+
+        .markdown img {
+            max-width: 100%;
+        }
+
+        .status {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        @media(max-width: 700px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #ddd;
+                max-height: 250px;
+            }
+
+            .content {
+                padding: 12px;
+            }
+
+            .markdown {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    GitHub Notes Viewer
+</div>
+
+<div class="container">
+
+    <aside class="sidebar">
+        <h3>My Notes</h3>
+        <div id="notesList">Loading notes...</div>
+    </aside>
+
+    <main class="content">
+        <div class="status" id="status">
+            Select a note to read.
+        </div>
+
+        <article class="markdown" id="markdownContent">
+            <h2>Welcome!</h2>
+            <p>Select a Markdown file from the sidebar.</p>
+        </article>
+    </main>
+
+</div>
+
+<script>
+    // =================================
+    // GITHUB CONFIGURATION
+    // =================================
+
+    const GITHUB_USERNAME = "YOUR_USERNAME";
+    const REPOSITORY = "YOUR_REPOSITORY";
+    const BRANCH = "main";
+
+    // Folder containing Markdown notes.
+    // Use "" for repository root.
+    const FOLDER = "notes";
+
+    const API_URL =
+        `https://api.github.com/repos/${GITHUB_USERNAME}/${REPOSITORY}/contents/${FOLDER}?ref=${BRANCH}`;
+
+    // =================================
+    // LOAD MARKDOWN FILES
+    // =================================
+
+    async function loadNotes() {
+
+        const list = document.getElementById("notesList");
+
+        try {
+
+            const response = await fetch(API_URL);
+
+            if (!response.ok) {
+                throw new Error("Unable to access GitHub repository.");
+            }
+
+            const files = await response.json();
+
+            const notes = files.filter(file =>
+                file.type === "file" &&
+                file.name.toLowerCase().endsWith(".md")
+            );
+
+            list.innerHTML = "";
+
+            if (notes.length === 0) {
+                list.textContent = "No Markdown notes found.";
+                return;
+            }
+
+            notes.forEach((note, index) => {
+
+                const item = document.createElement("div");
+
+                item.className = "note-item";
+                item.textContent = note.name;
+
+                item.onclick = () => {
+                    openNote(note.download_url, item);
+                };
+
+                list.appendChild(item);
+
+                // Automatically open first note.
+                if (index === 0) {
+                    openNote(note.download_url, item);
+                }
+
+            });
+
+        } catch (error) {
+
+            list.textContent = error.message;
+            console.error(error);
+
+        }
+    }
+
+    // =================================
+    // OPEN MARKDOWN FILE
+    // =================================
+
+    async function openNote(url, element) {
+
+        const content = document.getElementById("markdownContent");
+        const status = document.getElementById("status");
+
+        document.querySelectorAll(".note-item")
+            .forEach(item => item.classList.remove("active"));
+
+        element.classList.add("active");
+
+        status.textContent = "Loading note...";
+
+        try {
+
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error("Unable to load note.");
+            }
+
+            const markdown = await response.text();
+
+            content.innerHTML = marked.parse(markdown);
+
+            status.textContent = "Successfully loaded from GitHub";
+
+        } catch (error) {
+
+            content.textContent = error.message;
+            status.textContent = "Error";
+
+        }
+    }
+
+    // Start application
+    loadNotes();
+
+</script>
+
+</body>
+</html>
