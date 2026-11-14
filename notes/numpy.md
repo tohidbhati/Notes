@@ -15,9 +15,21 @@ It is a Python library used for:
 - Data manipulation
 - Scientific computing
 
+### Theory (in simple words)
+
+Think of NumPy as a **powerful calculator for lists of numbers**. Normal Python is good at general tasks, but it is slow when you have thousands or millions of numbers to calculate. NumPy solves this by giving us a special container called an **array** (officially `ndarray`, meaning "n-dimensional array") that stores numbers in a tight, organized way in memory.
+
+Under the hood, NumPy is written in the C language, so calculations run much faster than normal Python loops. Almost every data analytics library (Pandas, Matplotlib, Scikit-learn) is built on top of NumPy, so learning it first makes everything else easier.
+
 ### Why NumPy?
 
 Python lists can store multiple values, but NumPy arrays are designed for efficient numerical operations.
+
+**Key advantages:**
+- **Fast:** operations on whole arrays happen in one go, without writing loops.
+- **Less memory:** all elements share one data type, so storage is compact.
+- **Easy math:** you can add, multiply or compare entire arrays with one line.
+- **Rich tools:** built-in functions for statistics, sorting, random numbers and more.
 
 ### Installing NumPy
 
@@ -31,11 +43,28 @@ pip install numpy
 import numpy as np
 ```
 
-`np` is the standard alias used for NumPy.
+`np` is the standard alias used for NumPy. An alias is just a short nickname, so we write `np.array()` instead of `numpy.array()`.
 
 ---
 
 # 2. Python List vs NumPy Array
+
+### Theory (in simple words)
+
+A **Python list** is like a flexible bag: it can hold numbers, text, and even other lists mixed together. This flexibility makes it slower for math.
+
+A **NumPy array** is like a neat row of boxes where **every box holds the same type of data** (all integers, or all decimals). Because of this rule, NumPy knows exactly how to calculate quickly.
+
+The biggest practical difference is how operators behave:
+- On a list, `*` means "repeat the list".
+- On a NumPy array, `*` means "multiply each number".
+
+| Feature | Python List | NumPy Array |
+|---|---|---|
+| Data types | Can be mixed | Same type only |
+| Speed | Slower | Much faster |
+| Math on whole data | Needs loops | Works directly |
+| Memory use | More | Less |
 
 ### Python List
 
@@ -83,6 +112,17 @@ Output:
 
 # 3. Creating NumPy Arrays
 
+### Theory (in simple words)
+
+Before we can analyze data, we need to put it into an array. NumPy gives us many ways to do this:
+- **Manually**, by passing a list to `np.array()`.
+- **Automatically**, using helper functions like `zeros`, `ones`, `arange` and `linspace` when we need ready-made arrays.
+
+**Dimensions explained:**
+- **1D array** = a single row of numbers (like a list). Example: marks of one student.
+- **2D array** = rows and columns (like an Excel sheet or table). Example: marks of many students in many subjects.
+- **3D array** = a stack of 2D tables (like multiple Excel sheets). Example: marks of the same class across several years.
+
 ## 3.1 One-Dimensional Array
 
 ```python
@@ -117,6 +157,8 @@ print(arr)
 
 ## 3.4 Array of Zeros
 
+Useful when you need a blank array that you will fill later.
+
 ```python
 arr = np.zeros(5)
 
@@ -130,6 +172,8 @@ Output:
 ```
 
 ## 3.5 Array of Ones
+
+Same idea as zeros, but filled with 1.
 
 ```python
 arr = np.ones(5)
@@ -153,7 +197,7 @@ Output:
 
 ## 3.7 Using arange()
 
-Creates evenly spaced values using a step size.
+Creates evenly spaced values using a **step size**. It works like Python's `range()`, but returns a NumPy array. The stop value is **not included**.
 
 ```python
 arr = np.arange(1, 11)
@@ -183,7 +227,9 @@ Output:
 
 ## 3.8 Using linspace()
 
-Creates a specified number of evenly spaced values.
+Creates a **specified number of** evenly spaced values. The difference from `arange()`:
+- `arange()` → you decide the **step size**.
+- `linspace()` → you decide **how many values** you want, and the **end value is included**.
 
 ```python
 arr = np.linspace(0, 100, 5)
@@ -199,6 +245,8 @@ Output:
 
 ## 3.9 Identity Matrix
 
+An identity matrix has 1s on the diagonal and 0s everywhere else. It is used in matrix mathematics.
+
 ```python
 arr = np.eye(3)
 
@@ -208,6 +256,10 @@ print(arr)
 ---
 
 # 4. NumPy Array Properties
+
+### Theory (in simple words)
+
+Every array carries some "information labels" about itself, called **attributes**. They tell us what the array looks like without having to print all the data. This is very useful when working with large datasets, where you cannot read every number.
 
 Consider:
 
@@ -220,6 +272,8 @@ arr = np.array([
 
 ### 4.1 Number of Dimensions
 
+How many "directions" the array has (1D, 2D, 3D).
+
 ```python
 print(arr.ndim)
 ```
@@ -227,6 +281,8 @@ print(arr.ndim)
 Output: `2`
 
 ### 4.2 Array Shape
+
+The size of the array in each direction, written as `(rows, columns)`.
 
 ```python
 print(arr.shape)
@@ -238,6 +294,8 @@ It means 2 rows and 3 columns.
 
 ### 4.3 Total Number of Elements
 
+Rows × columns = total values.
+
 ```python
 print(arr.size)
 ```
@@ -245,6 +303,8 @@ print(arr.size)
 Output: `6`
 
 ### 4.4 Data Type
+
+The kind of data stored (integer, decimal, etc.).
 
 ```python
 print(arr.dtype)
@@ -262,7 +322,13 @@ Returns the memory occupied by each element in bytes.
 
 # 5. NumPy Data Types
 
-NumPy supports different numerical data types.
+### Theory (in simple words)
+
+Since every element in an array must be the same type, NumPy needs to know **what type** of data it is storing. The number in the name (32, 64) tells how many **bits** of memory each value uses:
+- More bits = can store bigger numbers or more decimal accuracy, but uses more memory.
+- Fewer bits = saves memory, but has limits.
+
+For most beginner work, NumPy chooses a suitable type automatically (`int64` for whole numbers, `float64` for decimals).
 
 | Data Type | Description |
 |---|---|
@@ -284,6 +350,8 @@ print(arr.dtype)
 
 ### Type Conversion
 
+`astype()` changes an array from one type to another. Converting decimals to integers **cuts off** the decimal part (it does not round).
+
 ```python
 arr = np.array([10.5, 20.8, 30.2])
 
@@ -302,7 +370,13 @@ Output:
 
 # 6. NumPy Indexing
 
-Indexing means accessing individual elements.
+### Theory (in simple words)
+
+**Indexing** means picking one specific value from an array using its **position number**, just like finding a house using its address.
+
+Two important rules:
+1. **Counting starts from 0**, not 1. So the first element is at position `0`.
+2. **Negative index counts from the end.** `-1` is the last element, `-2` is the second last, and so on.
 
 ```python
 arr = np.array([10, 20, 30, 40, 50])
@@ -321,6 +395,8 @@ Output:
 ```
 
 ## 6.1 Two-Dimensional Indexing
+
+In a 2D array, you need **two addresses**: `[row, column]`.
 
 ```python
 arr = np.array([
@@ -345,7 +421,16 @@ Output:
 
 # 7. NumPy Slicing
 
-Slicing extracts a portion of an array.
+### Theory (in simple words)
+
+If indexing picks **one** value, **slicing** picks a **range** of values, like cutting a slice from a cake.
+
+The syntax has three parts: `start : stop : step`
+- **start** → where to begin (included)
+- **stop** → where to end (**not included**)
+- **step** → how many positions to jump each time
+
+If you leave a part empty, NumPy uses a default: start = beginning, stop = end, step = 1.
 
 Syntax:
 
@@ -375,6 +460,8 @@ Output:
 
 ### Two-Dimensional Slicing
 
+For 2D arrays, give one slice for rows and one for columns: `[row_slice, column_slice]`.
+
 ```python
 arr = np.array([
     [10, 20, 30],
@@ -392,11 +479,17 @@ Output:
  [40 50]]
 ```
 
+**Tip:** A slice is a *view* of the original array, not a separate copy. Changing the slice can change the original array. Use `.copy()` if you want an independent copy.
+
 ---
 
 # 8. Reshaping Arrays
 
-Reshaping changes the dimensions of an array without changing its elements.
+### Theory (in simple words)
+
+**Reshaping** means rearranging the same numbers into a different layout, like taking 12 chocolates from a single row and arranging them into 3 rows of 4.
+
+The only rule: **the total number of elements must stay the same.** 12 elements can become 3×4, 4×3, 2×6 and so on, but not 5×3 (that needs 15).
 
 ```python
 arr = np.arange(1, 13)
@@ -414,9 +507,11 @@ Output:
  [ 9 10 11 12]]
 ```
 
+**Shortcut:** Use `-1` to let NumPy calculate one dimension for you. For example, `arr.reshape(3, -1)` automatically becomes 3 rows × 4 columns.
+
 ### Flattening
 
-Converts a multidimensional array into a one-dimensional array.
+Flattening is the opposite of reshaping into a table: it **converts a multidimensional array into a one-dimensional array**.
 
 ```python
 arr = np.array([
@@ -431,7 +526,13 @@ print(arr.flatten())
 
 # 9. Arithmetic Operations
 
-NumPy supports element-wise mathematical operations.
+### Theory (in simple words)
+
+In NumPy, arithmetic works **element by element**. When you add two arrays, the first number is added to the first number, the second to the second, and so on. This is called **element-wise operation**.
+
+This replaces the need for loops. Instead of writing a loop to add 1000 pairs of numbers, one line `a + b` does it all.
+
+**Requirement:** The two arrays should have the same shape (or compatible shapes, see Broadcasting in Section 11).
 
 ```python
 a = np.array([10, 20, 30])
@@ -456,6 +557,8 @@ Output:
 
 ### Mathematical Functions
 
+NumPy also provides ready-made math functions that apply to every element.
+
 ```python
 arr = np.array([1, 4, 9, 16, 25])
 
@@ -465,11 +568,32 @@ print(np.power(arr, 2))
 print(np.abs([-10, -20, 30]))
 ```
 
+- `sqrt` → square root
+- `square` → number multiplied by itself
+- `power` → raise to any power
+- `abs` → absolute value (removes the negative sign)
+
 ---
 
 # 10. Statistical Operations
 
-Statistics is an important part of data analytics.
+### Theory (in simple words)
+
+Statistics means **summarizing lots of data using a few meaningful numbers**. Instead of reading 1000 marks, we can say "the average is 78". NumPy has built-in functions for this, which makes it a core tool in data analytics.
+
+**What each measure means:**
+
+| Measure | Simple meaning |
+|---|---|
+| **Sum** | Add everything together |
+| **Mean** | The average: sum ÷ count |
+| **Median** | The middle value after sorting. Not affected much by extreme values |
+| **Min / Max** | Smallest / largest value |
+| **Variance** | How spread out the numbers are from the average (in squared units) |
+| **Standard deviation** | Spread of data in the same units as the data. Small = values are close to average; large = values are scattered |
+| **Percentile** | The value below which a given percentage of data falls. 75th percentile = 75% of values are below it |
+
+**Mean vs Median:** If salaries are 20k, 22k, 25k and 500k, the mean is pulled up by the big value, while the median stays closer to a "typical" salary.
 
 Consider student marks:
 
@@ -531,11 +655,25 @@ print(np.percentile(marks, 75))
 print(np.sort(marks))
 ```
 
+### The `axis` parameter (important for 2D data)
+
+In a 2D array, you can choose the direction of calculation:
+- `axis=0` → calculate **down the columns** (one result per column).
+- `axis=1` → calculate **across the rows** (one result per row).
+
 ---
 
 # 11. Broadcasting
 
-Broadcasting allows NumPy to perform operations between arrays of compatible shapes.
+### Theory (in simple words)
+
+Normally, to add two arrays they must be the same size. **Broadcasting** is NumPy's smart feature that **automatically stretches the smaller array** so the operation can still happen. You do not need to copy or repeat data yourself.
+
+Two common situations:
+1. **Scalar with array:** a single number is applied to every element.
+2. **Small array with big array:** the small array is repeated across the rows (or columns) of the bigger one.
+
+**Rule of thumb:** Compare shapes from the right side. Two dimensions are compatible if they are **equal**, or **one of them is 1** (or missing).
 
 ### Example 1: Scalar Broadcasting
 
@@ -552,6 +690,8 @@ Output:
 ```
 
 ### Example 2: Array Broadcasting
+
+Here `b` (shape 3) is stretched across both rows of `a` (shape 2×3).
 
 ```python
 a = np.array([
@@ -571,11 +711,26 @@ Output:
  [41 52 63]]
 ```
 
+**Real-life use:** Adding a 5-mark bonus to every student, or converting a whole price column to a different currency with one multiplication.
+
 ---
 
 # 12. Filtering and Conditional Operations
 
-Filtering helps extract data based on conditions.
+### Theory (in simple words)
+
+**Filtering** means keeping only the data that meets a condition, like selecting only students who scored 40 or more.
+
+It works in two steps:
+1. NumPy applies the condition to every element and produces a list of **True / False** values (called a *boolean mask*).
+2. When you put that mask inside the square brackets, NumPy keeps only the elements marked **True**.
+
+For multiple conditions, use:
+- `&` for **AND** (both must be true)
+- `|` for **OR** (at least one must be true)
+- `~` for **NOT**
+
+**Important:** Always put each condition inside **brackets ( )** when combining them. Do not use Python's `and` / `or` with arrays; they will cause an error.
 
 ```python
 marks = np.array([45, 60, 75, 30, 90, 85])
@@ -603,6 +758,8 @@ print(result)
 
 ### Using np.where()
 
+`np.where(condition, value_if_true, value_if_false)` works like an **if-else for the whole array**. It does not remove anything; it replaces values based on the condition.
+
 ```python
 marks = np.array([35, 80, 45, 90, 25])
 
@@ -613,6 +770,8 @@ print(result)
 
 ### Counting Conditions
 
+Since `True` counts as 1 and `False` as 0, we can count how many values meet a condition.
+
 ```python
 print(np.count_nonzero(marks >= 40))
 ```
@@ -620,6 +779,21 @@ print(np.count_nonzero(marks >= 40))
 ---
 
 # 13. Joining and Splitting Arrays
+
+### Theory (in simple words)
+
+Sometimes data comes in pieces and needs to be combined, or one big array needs to be divided into parts.
+
+- **Joining** = attaching arrays together, like connecting train coaches.
+- **Splitting** = cutting one array into smaller arrays.
+
+**Which join to use?**
+
+| Function | What it does |
+|---|---|
+| `concatenate` | Joins arrays end to end along an existing direction |
+| `vstack` | Stacks arrays **vertically** (one below another, adding rows) |
+| `hstack` | Stacks arrays **horizontally** (side by side, adding columns) |
 
 ## Concatenate
 
@@ -649,6 +823,8 @@ print(np.hstack((a, b)))
 
 ## Splitting
 
+`np.split(arr, 3)` divides the array into **3 equal parts**. The array length must be divisible by the number of parts, otherwise NumPy gives an error (use `np.array_split()` for unequal parts).
+
 ```python
 arr = np.array([10, 20, 30, 40, 50, 60])
 
@@ -661,7 +837,18 @@ print(result)
 
 # 14. Random Numbers
 
-NumPy provides random number generation.
+### Theory (in simple words)
+
+Random numbers are used to **create sample data, simulate situations, and shuffle or pick samples**. When you are learning, you do not always have a real dataset, so random numbers help you practice.
+
+Computers do not produce truly random numbers; they follow a mathematical formula that *looks* random. This is called **pseudo-random**. Because it is formula-based, we can control it using a **seed**.
+
+**Seed:** A starting number for the formula. Using the same seed gives the **same random numbers every time**, which is important when you want your results to be repeatable (for example, when sharing your work or testing).
+
+**Main functions:**
+- `randint(low, high)` → random whole numbers (the high value is not included).
+- `rand()` → random decimals between 0 and 1, evenly spread.
+- `randn()` → random decimals from the **normal distribution** (bell curve), centered around 0. Values can be negative.
 
 ```python
 # Random integer
@@ -694,7 +881,13 @@ print(rng.integers(1, 100, size=5))
 
 # 15. File Handling with NumPy
 
-NumPy can read and write numerical data files.
+### Theory (in simple words)
+
+Real-world data lives in **files**, not typed inside code. File handling means **saving** your arrays so you can use them later, and **loading** data from files into arrays.
+
+NumPy supports two kinds of files:
+- **Binary files (`.npy`)**: NumPy's own format. Fast and exact, but you cannot read them in Notepad.
+- **Text files (`.txt`, `.csv`)**: Human-readable and can be opened in Excel or Notepad, but slightly slower.
 
 ## 15.1 Saving an Array
 
@@ -730,6 +923,8 @@ print(data)
 
 ## 15.5 Working with CSV Files
 
+**CSV** stands for *Comma-Separated Values*: a simple text file where each line is a row and commas separate the columns.
+
 Create a file named `students.csv`:
 
 ```csv
@@ -742,6 +937,10 @@ Neha,60,72,68
 
 Read numerical columns using NumPy:
 
+- `delimiter=","` → tells NumPy that commas separate the values.
+- `skiprows=1` → skips the header line (column names).
+- `usecols=(1, 2, 3)` → reads only the number columns and ignores the Name column (since text would cause an error).
+
 ```python
 data = np.loadtxt(
     "students.csv",
@@ -753,7 +952,7 @@ data = np.loadtxt(
 print(data)
 ```
 
-Calculate average marks:
+Calculate average marks (per student, so across each row):
 
 ```python
 average = np.mean(data, axis=1)
@@ -761,7 +960,7 @@ average = np.mean(data, axis=1)
 print(average)
 ```
 
-Calculate subject-wise average:
+Calculate subject-wise average (per subject, so down each column):
 
 ```python
 subject_average = np.mean(data, axis=0)
@@ -775,9 +974,15 @@ print(subject_average)
 
 # 16. NumPy with Pandas
 
-Pandas is a Python library used for data manipulation and analysis.
+### Theory (in simple words)
 
-NumPy and Pandas work together frequently.
+**Pandas** is a library for working with **tables of data**, like Excel sheets inside Python. Its main structure is the **DataFrame**: a table with rows, columns and column names. It can hold mixed data (text, numbers, dates).
+
+How the two libraries differ and cooperate:
+- **NumPy** = fast math on pure numbers.
+- **Pandas** = organizing, labeling, cleaning and reading data tables.
+
+In practice, Pandas stores its numeric data using NumPy underneath. You can pull the numbers out as a NumPy array (`to_numpy()`), do calculations, and put the results back as a new column.
 
 ### Installation
 
@@ -793,6 +998,8 @@ import pandas as pd
 ```
 
 ## Example: Student Performance
+
+A DataFrame can be created from a dictionary: each key becomes a column name, and each list becomes the column values.
 
 ```python
 data = {
@@ -816,6 +1023,8 @@ print(python_marks)
 ```
 
 ### Calculate Average Using NumPy
+
+Selecting several columns gives a table of numbers; `axis=1` calculates the average across each student's row.
 
 ```python
 marks = df[["Python", "SQL", "Statistics"]].to_numpy()
@@ -843,6 +1052,8 @@ print(df)
 
 ### Find Topper
 
+`idxmax()` returns the row position of the highest value, and `loc` fetches that row.
+
 ```python
 topper = df.loc[df["Average"].idxmax()]
 
@@ -855,13 +1066,33 @@ print(topper)
 df.to_csv("student_results.csv", index=False)
 ```
 
+`index=False` prevents Pandas from saving the extra row-number column.
+
 ---
 
 # 17. NumPy with Matplotlib
 
-Matplotlib is used for data visualization.
+### Theory (in simple words)
 
-NumPy helps prepare numerical data, while Matplotlib displays it graphically.
+Numbers in tables are hard to understand quickly. A **chart** shows patterns instantly. **Matplotlib** is Python's most popular library for drawing charts and graphs.
+
+NumPy prepares and calculates the numbers, and Matplotlib draws them.
+
+**Choosing the right chart:**
+
+| Chart | Best used for |
+|---|---|
+| **Line chart** | Showing change over time (trends) |
+| **Bar chart** | Comparing categories |
+| **Pie chart** | Showing parts of a whole (percentage share) |
+| **Histogram** | Showing how data is distributed (how many values fall in each range) |
+| **Scatter plot** | Showing the relationship between two numeric variables |
+
+**Common commands used in every chart:**
+- `plt.title()` → heading of the chart
+- `plt.xlabel()` / `plt.ylabel()` → names of the axes
+- `plt.legend()` → label box when there are multiple lines
+- `plt.show()` → displays the chart
 
 ### Installation
 
@@ -877,6 +1108,8 @@ import matplotlib.pyplot as plt
 ```
 
 ## 17.1 Line Chart
+
+Points are connected by a line to show how something changes, such as sales across months.
 
 ```python
 months = np.array(["Jan", "Feb", "Mar", "Apr", "May"])
@@ -894,6 +1127,8 @@ plt.show()
 
 ## 17.2 Bar Chart
 
+Each category gets a bar; the taller the bar, the larger the value.
+
 ```python
 students = np.array(["Amit", "Rahul", "Priya", "Neha"])
 
@@ -909,6 +1144,8 @@ plt.show()
 ```
 
 ## 17.3 Pie Chart
+
+The circle is divided into slices; each slice shows a share of the total. `autopct` prints the percentage on each slice.
 
 ```python
 subjects = ["Python", "SQL", "Statistics"]
@@ -928,6 +1165,8 @@ plt.show()
 
 ## 17.4 Histogram
 
+Groups values into ranges called **bins** and shows how many values fall in each bin. Unlike a bar chart, it is used for **continuous numeric data**.
+
 ```python
 marks = np.array([
     45, 50, 55, 60, 65,
@@ -946,6 +1185,8 @@ plt.show()
 
 ## 17.5 Scatter Plot
 
+Each dot is one observation, placed using two values (x and y). If dots rise from left to right, the two variables are positively related (more study hours → higher marks).
+
 ```python
 study_hours = np.array([1, 2, 3, 4, 5, 6])
 
@@ -961,6 +1202,8 @@ plt.show()
 ```
 
 ## 17.6 Multiple Lines
+
+Drawing several lines on one chart makes comparison easy. The `label` and `legend()` tell which line is which.
 
 ```python
 months = np.array([1, 2, 3, 4, 5])
@@ -990,6 +1233,18 @@ plt.show()
 ## Objective
 
 Analyze student marks using NumPy, Pandas and Matplotlib.
+
+### Theory (in simple words)
+
+This project follows the **real workflow of a data analyst**:
+1. **Collect** data (create the dataset).
+2. **Calculate** new useful numbers (total, average).
+3. **Categorize** (assign grades).
+4. **Find insights** (topper, subject averages).
+5. **Visualize** (charts).
+6. **Share** (save results to a file).
+
+Each library does what it is best at: Pandas holds the table, NumPy calculates, and Matplotlib draws.
 
 ### Step 1: Import Libraries
 
@@ -1022,6 +1277,8 @@ print(df)
 
 ### Step 3: Calculate Total and Average
 
+Total = sum of all subjects for each student. Average = total ÷ number of subjects.
+
 ```python
 subjects = ["Python", "SQL", "Statistics"]
 
@@ -1035,6 +1292,8 @@ print(df)
 ```
 
 ### Step 4: Assign Grades
+
+`np.select()` is like a multi-level if-elif-else. It checks the conditions in order and gives the grade of the first one that is true. Anything that matches none gets the `default` grade.
 
 ```python
 df["Grade"] = np.select(
@@ -1069,6 +1328,8 @@ print(topper)
 
 ### Step 6: Calculate Subject Averages
 
+This shows which subject the class is strongest or weakest in.
+
 ```python
 subject_avg = np.mean(marks, axis=0)
 
@@ -1088,6 +1349,8 @@ plt.show()
 ```
 
 ### Step 8: Compare Student Performance
+
+`rotation=45` tilts the names so they do not overlap.
 
 ```python
 plt.bar(df["Name"], df["Average"])
@@ -1113,6 +1376,10 @@ print("Analysis completed successfully!")
 ---
 
 # 19. Practice Questions
+
+### Theory (in simple words)
+
+Reading is not enough to learn programming; **you learn by doing**. Try each question yourself first, then check the notes if you get stuck. The questions are arranged from easy to hard so your confidence builds step by step.
 
 ## Beginner Level
 
@@ -1141,14 +1408,21 @@ print("Analysis completed successfully!")
 1. Create a 5x5 random matrix.
 2. Find the maximum value in every row.
 3. Normalize an array using min-max normalization.
+   *(Hint: new value = (x − min) ÷ (max − min), which scales all values between 0 and 1.)*
 4. Calculate the correlation between two numerical arrays.
+   *(Hint: correlation tells how strongly two variables move together. Try `np.corrcoef()`.)*
 5. Generate a dataset and identify outliers using the IQR method.
+   *(Hint: IQR = Q3 − Q1. Values below Q1 − 1.5×IQR or above Q3 + 1.5×IQR are outliers, meaning unusually small or large values.)*
 6. Load a CSV file and perform statistical analysis.
 7. Combine NumPy, Pandas and Matplotlib to analyze a dataset.
 
 ---
 
 # 20. Important NumPy Functions Cheat Sheet
+
+### Theory (in simple words)
+
+A cheat sheet is a **quick-revision table**. You do not need to memorize everything; just remember what each function is *for*, and you can look up the exact usage when needed.
 
 | Function | Purpose |
 |---|---|
@@ -1159,7 +1433,7 @@ print("Analysis completed successfully!")
 | np.arange() | Generate range |
 | np.linspace() | Generate evenly spaced values |
 | np.reshape() | Change array shape |
-| np.flatten() | Convert to 1D |
+| arr.flatten() | Convert to 1D (a method called on the array) |
 | np.concatenate() | Join arrays |
 | np.split() | Split arrays |
 | np.mean() | Calculate average |
@@ -1198,5 +1472,15 @@ A typical data analytics workflow:
 3. Perform numerical calculations using NumPy.
 4. Visualize insights using Matplotlib.
 5. Communicate findings through reports.
+
+### Quick Summary of Key Ideas
+
+- A NumPy array holds **same-type numbers** and is **fast**.
+- Operations are **element-wise**; no loops needed.
+- **Indexing** picks one value; **slicing** picks a range; counting starts at 0.
+- **Broadcasting** lets arrays of different sizes work together.
+- **Filtering** uses True/False conditions to select data.
+- `axis=0` works down **columns**; `axis=1` works across **rows**.
+- NumPy calculates, Pandas organizes, Matplotlib visualizes.
 
 **End of NumPy Notes**
