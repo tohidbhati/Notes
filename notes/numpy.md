@@ -287,6 +287,7 @@ Here NumPy divided the distance from 0 to 100 into 5 equally spaced points, so t
 ### 3.9 Identity Matrix
 
 An identity matrix has 1s on the diagonal and 0s everywhere else. It is used in matrix mathematics, where it plays the role that the number 1 plays in ordinary multiplication: multiplying any matrix by the identity matrix leaves it unchanged. The argument gives the number of rows and columns.
+To check the identity matrix we can use eye() function
 
 ```python
 arr = np.eye(3)
